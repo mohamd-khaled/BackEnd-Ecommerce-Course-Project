@@ -1,13 +1,18 @@
 const express = require("express");
 
-const router = express.Router({ mergeparams: true});
+//mergeparams to access categoryId from parent route
+const router = express.Router({ mergeParams: true });
+
 const {
   addSubCategories,
   getSubCategories,
   getSubCategory,
   updateSubCategory,
   deleteSubCategory,
+  setCategoryIdToBody,
+  createFilterObject,
 } = require("../Controllers/subCategoryController");
+
 const {
   createSubCategoryValidator,
   getSubCategoryValidator,
@@ -15,8 +20,13 @@ const {
   deleteSubCategoryValidator,
 } = require("../utils/validators/subCategoryValidator");
 
-router.post("/", createSubCategoryValidator, addSubCategories);
-router.get("/", getSubCategories);
+router.post(
+  "/",
+  setCategoryIdToBody,
+  createSubCategoryValidator,
+  addSubCategories
+);
+router.get("/", createFilterObject, getSubCategories);
 router.get("/:id", getSubCategoryValidator, getSubCategory);
 
 router.put("/:id", updateSubCategoryValidator, updateSubCategory);
