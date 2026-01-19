@@ -1,9 +1,9 @@
 const qs = require("qs");
 
 class ApiFeatures {
-  constructor(queryString, productQuery) {
+  constructor(queryString, mongooseQuery) {
     this.queryString = queryString;
-    this.productQuery = productQuery;
+    this.mongooseQuery = mongooseQuery;
   }
 
   filter() {
@@ -24,18 +24,18 @@ class ApiFeatures {
     console.log("Filter Query:", queryString);
     console.log("Filter Query:", JSON.parse(queryString));
 
-    this.productQuery = this.productQuery.find(JSON.parse(queryString));
+    this.mongooseQuery = this.mongooseQuery.find(JSON.parse(queryString));
 
     return this;
   }
 
   sort() {
     if (this.queryString.sort) {
-      this.productQuery = this.productQuery.sort(
+      this.mongooseQuery = this.mongooseQuery.sort(
         this.queryString.sort.split(",").join(" ")
       );
     } else {
-      this.productQuery = this.productQuery.sort("-createdAt");
+      this.mongooseQuery = this.mongooseQuery.sort("-createdAt");
     }
     return this;
   }
@@ -43,9 +43,9 @@ class ApiFeatures {
   limitFields() {
     if (this.queryString.fields) {
       const fields = this.queryString.fields.split(",").join(" ");
-      this.productQuery = this.productQuery.select(fields);
+      this.mongooseQuery = this.mongooseQuery.select(fields);
     } else {
-      this.productQuery = this.productQuery.select("-__v");
+      this.mongooseQuery = this.mongooseQuery.select("-__v");
     }
     return this;
   }
@@ -55,21 +55,41 @@ class ApiFeatures {
       // Add $or to the existing filter object if present, else create a new one
       const keywordQuery = {
         $or: [
+          { name: { $regex: this.queryString.keyword, $options: "i" } },
           { title: { $regex: this.queryString.keyword, $options: "i" } },
           { description: { $regex: this.queryString.keyword, $options: "i" } },
         ],
       };
       // Merge with existing query conditions
-      this.productQuery = this.productQuery.find(keywordQuery);
+      this.mongooseQuery = this.mongooseQuery.find(keywordQuery);
     }
     return this;
   }
 
-  paginate() {
+  paginate(countDocuments) {
     const page = this.queryString.page * 1 || 1;
-    const limit = this.queryString.limit * 5 || 50;
+    const limit = this.queryString.limit * 5 || 5;
     const skip = (page - 1) * limit;
-    this.productQuery = this.productQuery.skip(skip).limit(limit);
+    const endIndex = page * limit;
+
+    const pagination = {};
+
+    // Add pagination info
+    pagination.currentPage = page;
+    pagination.limit = limit;
+    pagination.numberOfPages = Math.ceil(countDocuments / limit);
+
+    //nextpage
+    if (endIndex < countDocuments) {
+      pagination.next = page + 1;
+    }
+
+    if (skip > 0) {
+      pagination.prev = page - 1;
+    }
+
+    this.mongooseQuery = this.mongooseQuery.skip(skip).limit(limit);
+    this.paginationResult = pagination;
     return this;
   }
 }
