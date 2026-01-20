@@ -8,6 +8,8 @@ const {
   getBrand,
   updateBrand,
   deleteBrand,
+  uploadBrandImage,
+  resizeImage,
 } = require("../Controllers/brandController");
 
 const {
@@ -17,11 +19,23 @@ const {
   deleteBrandValidator,
 } = require("../utils/validators/brandValidator");
 
-router.post("/", createBrandValidator, addBrands);
+router.post(
+  "/",
+  uploadBrandImage,
+  resizeImage,
+  createBrandValidator,
+  addBrands
+);
 router.get("/", getBrands);
 router.get("/:id", getBrandValidator, getBrand);
 
-router.put("/:id", updateBrandValidator, updateBrand);
+router.put(
+  "/:id",
+  uploadBrandImage,
+  resizeImage,
+  updateBrandValidator,
+  updateBrand
+);
 router.delete("/:id", deleteBrandValidator, deleteBrand);
 
 module.exports = router;

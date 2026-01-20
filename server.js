@@ -1,9 +1,11 @@
 // Requires Moduels
 const express = require("express");
 const dotenv = require("dotenv");
+const morgan = require("morgan"); //for logs
+
+const path = require("path");
 
 dotenv.config({ path: "config.env" }); //if the fle named something other than ".env" we must add path:"filename"
-const morgan = require("morgan"); //for logs
 const dbConnection = require("./Config/database");
 const categoryRoute = require("./Routes/categoryRoute");
 const subCategoryRoute = require("./Routes/subCategoryRoute");
@@ -20,6 +22,7 @@ const app = express();
 
 // Middleware
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "uploads")));
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
