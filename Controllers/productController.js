@@ -14,7 +14,6 @@ const uploadProductImage = uploadImage.uploadMultiImage([
 
 // Resize Image
 const resizeImage = asyncHandler(async (req, res, next) => {
-  console.log(req.files);
   // Image Cover Processing
   if (req.files.imageCover) {
     const imageCoverFileName = `product-${uuidv4()}-${Date.now()}-cover.jpeg`;

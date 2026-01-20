@@ -12,7 +12,9 @@ const createFilterObject = (req, res, next) => {
 
 const setCategoryIdToBody = (req, res, next) => {
   if (!req.body.categoryId) {
-    req.body.category = req.params.categoryId;
+    if (req.params.categoryId) {
+      req.body.category = req.params.categoryId;
+    }
   }
   next();
 };
