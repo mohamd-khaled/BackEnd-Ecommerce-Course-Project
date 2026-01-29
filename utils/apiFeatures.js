@@ -11,7 +11,7 @@ class ApiFeatures {
     const parsedQuery = qs.parse(this.queryString);
 
     const queryObj = { ...parsedQuery };
-    console.log("Original Query Object:", queryObj);
+
     const excludedFields = ["page", "sort", "limit", "fields", "keyword"];
     excludedFields.forEach((field) => delete queryObj[field]);
 
@@ -19,10 +19,8 @@ class ApiFeatures {
     let queryString = JSON.stringify(queryObj);
     queryString = queryString.replace(
       /\b(gte|gt|lte|lt)\b/g,
-      (match) => `$${match}`
+      (match) => `$${match}`,
     );
-    console.log("Filter Query:", queryString);
-    console.log("Filter Query:", JSON.parse(queryString));
 
     this.mongooseQuery = this.mongooseQuery.find(JSON.parse(queryString));
 
@@ -32,7 +30,7 @@ class ApiFeatures {
   sort() {
     if (this.queryString.sort) {
       this.mongooseQuery = this.mongooseQuery.sort(
-        this.queryString.sort.split(",").join(" ")
+        this.queryString.sort.split(",").join(" "),
       );
     } else {
       this.mongooseQuery = this.mongooseQuery.sort("-createdAt");

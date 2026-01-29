@@ -44,6 +44,7 @@ router.put(
 );
 
 router.delete("/deleteme", protect, allowedTo("user"), deleteMe);
+
 // Admin Routes
 router.post(
   "/",
@@ -66,6 +67,7 @@ router.put(
   updateUserValidator,
   updateUser,
 );
+
 router.delete(
   "/:id",
   protect,
@@ -73,6 +75,7 @@ router.delete(
   deleteUserValidator,
   deleteUser,
 );
+
 router.put("/changepassword/:id", protect, allowedTo("admin"), updatePassword);
 
 module.exports = router;
