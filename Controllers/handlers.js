@@ -29,7 +29,7 @@ exports.getOne = (Model) =>
     const document = await Model.findById(req.params.id);
     if (!document) {
       return next(
-        new ApiError(`No Document for this ID: ${req.params.id}`, 404)
+        new ApiError(`No Document for this ID: ${req.params.id}`, 404),
       );
     }
     res.status(200).json({ data: document });
@@ -46,7 +46,7 @@ exports.deleteOne = (Model) =>
     const document = await Model.findByIdAndDelete(req.params.id);
     if (!document) {
       return next(
-        new ApiError(`No Document for this ID: ${req.params.id}`, 404)
+        new ApiError(`No Document for this ID: ${req.params.id}`, 404),
       );
     }
     res.status(204).json({ msg: "Document Deleted" });
@@ -59,7 +59,7 @@ exports.updateOne = (Model) =>
     });
     if (!document) {
       return next(
-        new ApiError(`No Document for this ID: ${req.params.id}`, 404)
+        new ApiError(`No Document for this ID: ${req.params.id}`, 404),
       );
     }
     res.status(200).json({ data: document });

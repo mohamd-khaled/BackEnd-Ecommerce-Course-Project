@@ -3,6 +3,8 @@ const express = require("express");
 //mergeparams to access categoryId from parent route
 const router = express.Router({ mergeParams: true });
 
+const { protect, allowedTo } = require("../Controllers/authController");
+
 const {
   addSubCategories,
   getSubCategories,
@@ -22,14 +24,28 @@ const {
 
 router.post(
   "/",
+  protect,
+  allowedTo("admin", "manager"),
   setCategoryIdToBody,
   createSubCategoryValidator,
-  addSubCategories
+  addSubCategories,
 );
 router.get("/", createFilterObject, getSubCategories);
 router.get("/:id", getSubCategoryValidator, getSubCategory);
 
-router.put("/:id", updateSubCategoryValidator, updateSubCategory);
-router.delete("/:id", deleteSubCategoryValidator, deleteSubCategory);
+router.put(
+  "/:id",
+  protect,
+  allowedTo("admin", "manager"),
+  updateSubCategoryValidator,
+  updateSubCategory,
+);
+router.delete(
+  "/:id",
+  protect,
+  allowedTo("admin", "manager"),
+  deleteSubCategoryValidator,
+  deleteSubCategory,
+);
 
 module.exports = router;
