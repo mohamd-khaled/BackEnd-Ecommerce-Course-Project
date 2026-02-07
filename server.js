@@ -13,6 +13,7 @@ const brandRoute = require("./Routes/brandRoute");
 const productRoute = require("./Routes/productRoute");
 const userRoute = require("./Routes/userRoute");
 const authRoute = require("./Routes/authRoute");
+const reviewRoute = require("./Routes/reviewRoute");
 
 const ApiError = require("./utils/apierror");
 const globalError = require("./middlewares/errorMiddleware");
@@ -38,6 +39,7 @@ app.use("/api/v1/brands", brandRoute);
 app.use("/api/v1/products", productRoute);
 app.use("/api/v1/users", userRoute);
 app.use("/api/v1/auth", authRoute);
+app.use("/api/v1/reviews", reviewRoute);
 
 app.use((req, res, next) => {
   next(new ApiError(`Can't Find This Route: ${req.originalUrl}`, 400));
