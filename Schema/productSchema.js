@@ -68,8 +68,18 @@ const productSchema = new mongoose.Schema(
       default: 0,
     },
   },
-  { timestamps: true }
+  { timestamps: true,
+    // To ENable Virtual Populate
+    toJSON: {virtuals: true},
+    toObject: {virtuals: true},
+   }
 );
+
+productSchema.virtual("reviews",{
+  ref: "Review", 
+  foreignField: "product", 
+  localField: "_id"
+});
 
 productSchema.pre(/^find/, async function () {
   this.populate({ path: "category", select: "name" });

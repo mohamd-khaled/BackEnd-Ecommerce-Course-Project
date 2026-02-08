@@ -42,24 +42,24 @@ exports.createReviewValidator = [
 ];
 
 exports.updateReviewValidator = [
-  check("id")
+  check("id", "Invalid Review ID")
+    .notEmpty()
+    .withMessage("Review ID Is Required")
     .isMongoId()
     .withMessage("Invalid Review ID Format")
-    .custom((value, { req }) => {
-      reviewModel.findById(value).then((review) => {
+    .custom((value, { req }) => reviewModel.findById(value).then((review) => {
         if (!review) {
           return Promise.reject(new Error("Review Not Found"));
         }
         console.log(req.params.id);
         console.log(review);
-        console.log(review.user.toString(), req.user._id.toString());
-        if (review.user.toString() !== req.user._id.toString()) {
+        console.log(review.user._id.toString(), req.user._id.toString());
+        if (review.user._id.toString() !== req.user._id.toString()) {
           return Promise.reject(
             new Error("You Are Not Authorized To Update This Review"),
           );
         }
-      });
-    }),
+      })),
   validatorMiddleware,
 ];
 
@@ -72,7 +72,7 @@ exports.deleteReviewValidator = [
         if (!review) {
           return Promise.reject(new Error("Review Not Found"));
         }
-        if (review.user.toString() !== req.user_id.toString()) {
+        if (review.user._id.toString() !== req.user._id.toString()) {
           return Promise.reject(
             new Error("You Are Not Authorized To Update This Review"),
           );

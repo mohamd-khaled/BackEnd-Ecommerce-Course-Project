@@ -18,8 +18,14 @@ const {
   updateProductValidator,
   deleteProductValidator,
 } = require("../utils/validators/productValidator");
-
+const reviewRoute = require("./reviewRoute");
 const { protect, allowedTo } = require("../Controllers/authController");
+
+// POST /product/productId/reviews
+// GET /product/productId/reviews
+// GET /product/productId/reviews/reviewId
+router.use("/:productId/reviews", reviewRoute)
+
 
 router.post(
   "/",

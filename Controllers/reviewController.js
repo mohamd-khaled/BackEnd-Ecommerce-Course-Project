@@ -3,6 +3,33 @@
 const reviewModel = require("../Schema/reviewSchema");
 const handlers = require("./handlers");
 
+
+const createFilterObject = (req, res, next) => {
+  let filterObj = {};
+  if (req.params.productId) {
+    filterObj = { product: req.params.productId };
+  }
+  req.filterObj = filterObj;
+  next();
+};
+
+
+const setproductIdToBody = (req, res, next) => {
+  if (!req.body.productId) {
+    if (req.params.productId) {
+      req.body.product = req.params.productId;
+    }
+  }
+
+    if (!req.body.user._id) {
+    if (req.params.user._id) {
+      req.body.user = req.params.user._id;
+    }
+  }
+  next();
+};
+
+
 // @desc Get Reviews
 // @route GET /api/v1/reviews
 // @access public
@@ -34,4 +61,6 @@ module.exports = {
   getReview,
   updateReview,
   deleteReview,
+  createFilterObject,
+  setproductIdToBody,
 };

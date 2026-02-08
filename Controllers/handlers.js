@@ -24,9 +24,17 @@ exports.getAll = (Model) =>
       .json({ results: documents.length, paginationResult, data: documents });
   });
 
-exports.getOne = (Model) =>
+exports.getOne = (Model, populationOpt) =>
   asyncHandler(async (req, res, next) => {
-    const document = await Model.findById(req.params.id);
+    // 1- Build Query
+    let query =  Model.findById(req.params.id);
+    if(populationOpt){
+      query = query.populate(populationOpt);
+    }
+
+    // 2- execute query 
+    const document = await query;
+    
     if (!document) {
       return next(
         new ApiError(`No Document for this ID: ${req.params.id}`, 404),
@@ -49,11 +57,13 @@ exports.deleteOne = (Model) =>
         new ApiError(`No Document for this ID: ${req.params.id}`, 404),
       );
     }
+    document.remove();
     res.status(204).json({ msg: "Document Deleted" });
   });
 
 exports.updateOne = (Model) =>
   asyncHandler(async (req, res, next) => {
+    console.log(req.params.id)
     const document = await Model.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
@@ -62,5 +72,6 @@ exports.updateOne = (Model) =>
         new ApiError(`No Document for this ID: ${req.params.id}`, 404),
       );
     }
+    document.save();
     res.status(200).json({ data: document });
   });
