@@ -57,7 +57,7 @@ exports.deleteOne = (Model) =>
         new ApiError(`No Document for this ID: ${req.params.id}`, 404),
       );
     }
-    document.remove();
+    document.deleteOne();
     res.status(204).json({ msg: "Document Deleted" });
   });
 

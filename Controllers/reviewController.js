@@ -22,8 +22,8 @@ const setproductIdToBody = (req, res, next) => {
   }
 
     if (!req.body.user._id) {
-    if (req.params.user._id) {
-      req.body.user = req.params.user._id;
+    if (req.params.userId) {
+      req.body.user = req.params.userId;
     }
   }
   next();

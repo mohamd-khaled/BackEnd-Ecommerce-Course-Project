@@ -59,7 +59,7 @@ reviewSchema.post("save", async function () {
   await this.constructor.calcAverageRatingAndQuantity(this.product);
 })
 
-reviewSchema.post("remove", async function () {
+reviewSchema.post("deleteOne", async function () {
   // this points to the current review document
   await this.constructor.calcAverageRatingAndQuantity(this.product);
 })

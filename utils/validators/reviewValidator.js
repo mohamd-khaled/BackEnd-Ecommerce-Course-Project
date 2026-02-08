@@ -64,11 +64,12 @@ exports.updateReviewValidator = [
 ];
 
 exports.deleteReviewValidator = [
-  check("id")
+  check("id", "Invalid Review ID")
+    .notEmpty()
+    .withMessage("Review ID Is Required")
     .isMongoId()
     .withMessage("Invalid Review ID Format")
-    .custom((value, { req }) => {
-      reviewModel.findById(value).then((review) => {
+    .custom((value, { req }) => reviewModel.findById(value).then((review) => {
         if (!review) {
           return Promise.reject(new Error("Review Not Found"));
         }
@@ -77,7 +78,6 @@ exports.deleteReviewValidator = [
             new Error("You Are Not Authorized To Update This Review"),
           );
         }
-      });
-    }),
+      })),
   validatorMiddleware,
 ];
