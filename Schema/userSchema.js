@@ -51,6 +51,11 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    // Children Referencing (one to many relationship)
+    wishlist: [
+      {type: mongoose.Schema.ObjectId,
+      ref: "Product",}
+    ],
   },
   { timestamps: true },
 );
