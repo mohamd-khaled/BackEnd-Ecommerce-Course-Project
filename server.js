@@ -7,15 +7,9 @@ const path = require("path");
 
 dotenv.config({ path: "config.env" }); //if the fle named something other than ".env" we must add path:"filename"
 const dbConnection = require("./Config/database");
-const categoryRoute = require("./Routes/categoryRoute");
-const subCategoryRoute = require("./Routes/subCategoryRoute");
-const brandRoute = require("./Routes/brandRoute");
-const productRoute = require("./Routes/productRoute");
-const userRoute = require("./Routes/userRoute");
-const authRoute = require("./Routes/authRoute");
-const reviewRoute = require("./Routes/reviewRoute");
-const wishlistRoute = require("./Routes/wishlistRoute");
-const addressRoute = require("./Routes/addressRoute");
+
+const mountRoutes = require("./Routes");
+
 
 
 const ApiError = require("./utils/apierror");
@@ -36,15 +30,7 @@ if (process.env.NODE_ENV === "development") {
 }
 
 // Mount Route
-app.use("/api/v1/categories", categoryRoute);
-app.use("/api/v1/subcategories", subCategoryRoute);
-app.use("/api/v1/brands", brandRoute);
-app.use("/api/v1/products", productRoute);
-app.use("/api/v1/users", userRoute);
-app.use("/api/v1/auth", authRoute);
-app.use("/api/v1/reviews", reviewRoute);
-app.use("/api/v1/wishlist", wishlistRoute);
-app.use("/api/v1/address", addressRoute); 
+mountRoutes(app);
 
 app.use((req, res, next) => {
   next(new ApiError(`Can't Find This Route: ${req.originalUrl}`, 400));
