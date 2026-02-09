@@ -21,7 +21,7 @@ router.post(
 );
 
 router.delete(
-  "/",
+  "/:id",
   protect,
   allowedTo("user"),
   removeAddress,

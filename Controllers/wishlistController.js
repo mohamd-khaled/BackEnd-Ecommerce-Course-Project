@@ -7,8 +7,9 @@ const userModel = require("../Schema/userSchema");
 // @route POST /api/v1/wishlist
 // @access Private/user
 exports.addToWishlist = asyncHandler(async (req, res, next) => {
+
     const user = await userModel.findByIdAndUpdate(req.user._id, {
-        $addToSet: {wishlist: req.body.productId}
+        $addToSet: {wishlist: req.body.product}
     },{new: true});
 
 
@@ -20,8 +21,9 @@ exports.addToWishlist = asyncHandler(async (req, res, next) => {
 // @route Delete /api/v1/wishlist/:id
 // @access Private/user
 exports.removeFromWishlist = asyncHandler(async (req, res, next) => {
+    
     const user = await userModel.findByIdAndUpdate(req.user._id, {
-        $pull: {wishlist: req.params.productId}
+        $pull: {wishlist: req.params.id}
     },{new: true});
 
 

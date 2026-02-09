@@ -60,9 +60,10 @@ reviewSchema.post("save", async function () {
   await this.constructor.calcAverageRatingAndQuantity(this.product);
 })
 
-reviewSchema.post("deleteOne", async function () {
+reviewSchema.post("deleteOne", { document: true }, async function () {
   // this points to the current review document
-  await this.constructor.calcAverageRatingAndQuantity(this.product);
+  const Review = this.constructor;
+  await Review.calcAverageRatingAndQuantity(this.product);
 })
 
 const reviewModel = mongoose.model("Review", reviewSchema);

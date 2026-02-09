@@ -19,7 +19,7 @@ exports.addAddress = asyncHandler(async (req, res, next) => {
 // @access Private/user
 exports.removeAddress = asyncHandler(async (req, res, next) => {
     const user = await userModel.findByIdAndUpdate(req.user._id, {
-        $pull: {addresses: req.params.addressId}
+        $pull: {addresses: {_id: req.params.id}}
     },{new: true});
 
     res.status(200).json({status: "success", message: "Address Removed successfully", data: user.addresses});
