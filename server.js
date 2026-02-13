@@ -2,8 +2,9 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const morgan = require("morgan"); //for logs
-
+const cors = require("cors");
 const path = require("path");
+const compression = require('compression')
 
 dotenv.config({ path: "config.env" }); //if the fle named something other than ".env" we must add path:"filename"
 const dbConnection = require("./Config/database");
@@ -19,6 +20,9 @@ dbConnection();
 
 //Express APP
 const app = express();
+app.use(cors()); // Enable CORS for all routes
+
+app.use(compression()); // Compress all routes responses
 
 // Middleware
 app.use(express.json());

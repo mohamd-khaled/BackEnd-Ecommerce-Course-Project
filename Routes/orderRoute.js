@@ -6,7 +6,8 @@ const {
   getAllOrders,
   getSpecificOrder,
   updateOrderToPaid,
-  updateOrderToDeliver
+  updateOrderToDeliver,
+  getCheckoutSession
 } = require("../Controllers/orderController");
 
 const { protect, allowedTo } = require("../Controllers/authController");
@@ -18,5 +19,6 @@ router.get("/", protect, allowedTo("user", "admin", "manager"), filterOrderForLo
 router.get("/:id", protect, allowedTo("user", "admin", "manager"), filterOrderForLoggedUser, getSpecificOrder);
 router.put("/:id/pay", protect, allowedTo("admin", "manager"), updateOrderToPaid);
 router.put("/:id/deliver", protect, allowedTo("admin", "manager"), updateOrderToDeliver);
+router.get("/checkout-session/:cartId", protect, allowedTo("user"), getCheckoutSession);
 
 module.exports = router;
