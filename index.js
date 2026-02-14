@@ -8,13 +8,16 @@ const compression = require('compression')
 const hpp = require("hpp");
 const mongoSanitize = require('express-mongo-sanitize');
 
-dotenv.config({ path: "config.env" }); //if the fle named something other than ".env" we must add path:"filename"
+// Load from config.env only if not in production (Railway sets vars differently)
+if (process.env.NODE_ENV !== "production") {
+  dotenv.config({ path: "config.env" });
+} else if (!process.env.STRIPE_SECRET) {
+  // Fallback for production if needed
+  dotenv.config({ path: "config.env" });
+}
+
 const dbConnection = require("./Config/database");
-
 const mountRoutes = require("./Routes");
-
-
-
 const ApiError = require("./utils/apierror");
 const globalError = require("./middlewares/errorMiddleware");
 // connect with DB
