@@ -7,6 +7,8 @@ const bcrypt = require("bcryptjs");
 const userModel = require("../Schema/userSchema");
 const ApiError = require("../utils/apierror");
 const sendEmail = require("../utils/sendEmail");
+const {sanitizeUser} = require("../utils/sanitizeData");
+
 
 const createToken = (payload) =>
   jwt.sign({ userId: payload }, process.env.JWT_SECRET_KEY, {
@@ -27,7 +29,7 @@ exports.signUp = asyncHandler(async (req, res, next) => {
   // 2-Generate token
   const token = createToken(user._id);
   // 3-send response
-  res.status(201).json({ data: user, token });
+  res.status(201).json({ data: sanitizeUser(user), token });
 });
 
 // @desc   login User
@@ -43,7 +45,7 @@ exports.login = asyncHandler(async (req, res, next) => {
   // 3-Generate token
   const token = createToken(user._id);
   // 4-send response
-  res.status(200).json({ data: user, token });
+  res.status(200).json({ data: sanitizeUser(user), token });
 });
 
 // @desc   Protect Routes to logged in users

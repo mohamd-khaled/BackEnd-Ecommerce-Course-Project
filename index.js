@@ -5,6 +5,8 @@ const morgan = require("morgan"); //for logs
 const cors = require("cors");
 const path = require("path");
 const compression = require('compression')
+const hpp = require("hpp");
+const mongoSanitize = require('express-mongo-sanitize');
 
 dotenv.config({ path: "config.env" }); //if the fle named something other than ".env" we must add path:"filename"
 const dbConnection = require("./Config/database");
@@ -20,18 +22,28 @@ dbConnection();
 
 //Express APP
 const app = express();
+
+// Middleware
 app.use(cors()); // Enable CORS for all routes
 
 app.use(compression()); // Compress all routes responses
 
-// Middleware
-app.use(express.json());
+app.use(express.json({
+  limit: "10kb", // Limit the size of incoming JSON payloads to 10KB
+}));
+// app.use(mongoSanitize());  // To remove data using these defaults
+
 app.use(express.static(path.join(__dirname, "uploads")));
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
   console.log(`MODE: ${process.env.NODE_ENV}`);
 }
+
+
+app.use(hpp({ whitelist: ["price", "sold", "quantity", "ratingsAverage", "ratingsQuantity"] })); // Prevent HTTP Parameter Pollution
+
+
 
 // Mount Route
 mountRoutes(app);
